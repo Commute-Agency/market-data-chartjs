@@ -232,5 +232,36 @@ function formatNumbersByAttribute(attribute: string, locale: string): void {
   });
 }
 
-// Run the check for Chart.js after DOM is loaded
-document.addEventListener('DOMContentLoaded', () => waitForChartJsAndInitialize());
+/**
+ * Handles the dropdown functionality for the charts index.
+ */
+function chartsIndexDropdown() {
+  const dropdownLinks = document.querySelectorAll<HTMLElement>("[data-tab-target]");
+
+	dropdownLinks.forEach((link) => {
+		const targetId = link.dataset.tabTarget;
+		const target = document.getElementById(targetId);
+        
+		if (!target) return;
+        
+		link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const isActive = target.closest('[aria-selected="true"]')
+                    ? true
+                    : false;
+                    
+            if (isActive) return;
+
+			target.click();
+		});
+	});
+}
+
+// Initialize all functions
+function init() {
+  waitForChartJsAndInitialize();
+  chartsIndexDropdown();
+}
+
+// Run the init function after the DOM is loaded
+document.addEventListener('DOMContentLoaded',  init);
