@@ -1,6 +1,6 @@
 {
   "name": "@commute/market-data-chartjs",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A library to help you render market data using ChartJS.",
   "homepage": "https://github.com/Commute-Agency/market-data-chartjs#readme",
   "license": "ISC",
