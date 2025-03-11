@@ -239,8 +239,8 @@ function chartsIndexDropdown() {
   const dropdownLinks = document.querySelectorAll<HTMLElement>('[data-tab-target]');
 
   dropdownLinks.forEach((link) => {
-    const targetId = link.dataset.tabTarget;
-    const target = document.getElementById(targetId);
+    const targetId: string | undefined = link.dataset.tabTarget;
+    const target: HTMLElement | null = targetId ? document.getElementById(targetId) : null;
 
     if (!target) return;
 
