@@ -189,9 +189,9 @@ function initializeChart(
               return index === 0
                 ? ''
                 : value.toLocaleString(locale, {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 2,
-                });
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2,
+                  });
             },
           },
           clip: false,
@@ -236,25 +236,23 @@ function formatNumbersByAttribute(attribute: string, locale: string): void {
  * Handles the dropdown functionality for the charts index.
  */
 function chartsIndexDropdown() {
-  const dropdownLinks = document.querySelectorAll<HTMLElement>("[data-tab-target]");
+  const dropdownLinks = document.querySelectorAll<HTMLElement>('[data-tab-target]');
 
-	dropdownLinks.forEach((link) => {
-		const targetId = link.dataset.tabTarget;
-		const target = document.getElementById(targetId);
-        
-		if (!target) return;
-        
-		link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const isActive = target.closest('[aria-selected="true"]')
-                    ? true
-                    : false;
-                    
-            if (isActive) return;
+  dropdownLinks.forEach((link) => {
+    const targetId = link.dataset.tabTarget;
+    const target = document.getElementById(targetId);
 
-			target.click();
-		});
-	});
+    if (!target) return;
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isActive = target.closest('[aria-selected="true"]') ? true : false;
+
+      if (isActive) return;
+
+      target.click();
+    });
+  });
 }
 
 // Initialize all functions
@@ -264,4 +262,4 @@ function init() {
 }
 
 // Run the init function after the DOM is loaded
-document.addEventListener('DOMContentLoaded',  init);
+document.addEventListener('DOMContentLoaded', init);
