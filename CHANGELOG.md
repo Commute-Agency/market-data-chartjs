@@ -1,5 +1,11 @@
 # @commute/market-data-chartjs
 
+## 2.2.0
+
+### Minor Changes
+
+- d7bdcae: Change init function name to prevent errors
+
 ## 2.1.0
 
 ### Minor Changes
