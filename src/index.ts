@@ -15,18 +15,14 @@ const locale =
 /**
  * Waits for the Chart.js library to load and initializes the charts.
  */
-function waitForChartJsAndInitialize(timeout = 6000, interval = 50): void {
-  const startTime = Date.now();
-
+function waitForChartJsAndInitialize(interval = 1000): void {
   const checkChartJs = () => {
     if (typeof Chart !== 'undefined') {
       // eslint-disable-next-line no-console
       console.log('Chart.js is loaded. Initializing charts...');
       initializeCharts(); // Call the main chart initialization function
-    } else if (Date.now() - startTime < timeout) {
-      setTimeout(checkChartJs, interval); // Retry after the interval
     } else {
-      console.error('Chart.js library did not load within the timeout period.');
+      setTimeout(checkChartJs, interval); // Retry after the interval
     }
   };
 
