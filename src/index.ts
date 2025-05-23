@@ -256,10 +256,10 @@ function chartsIndexDropdown() {
 }
 
 // Initialize all functions
-function init() {
+function initMarketData() {
   waitForChartJsAndInitialize();
   chartsIndexDropdown();
 }
 
 // Run the init function after the DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', initMarketData);
