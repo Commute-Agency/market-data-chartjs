@@ -1,5 +1,11 @@
 # @commute/market-data-chartjs
 
+## 2.3.0
+
+### Minor Changes
+
+- 0edf8e3: Remove timeout for chartjs library waiting
+
 ## 2.2.0
 
 ### Minor Changes
