@@ -125,10 +125,16 @@ function initializeChart(
     return;
   }
 
+  // Colors can be customized via data-attributes on the canvas element,
+  // falling back to the current green defaults when not provided.
+  const lineColor = canvas.dataset.lineColor || 'rgba(0, 192, 0, 0.7)';
+  const gradientTopColor = canvas.dataset.gradientTopColor || lineColor;
+  const gradientBottomColor = canvas.dataset.gradientBottomColor || 'rgba(0, 192, 0, 0.1)';
+
   // Create gradient for the chart background
   const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, 'rgba(0, 192, 0, 0.7)'); // Top color
-  gradient.addColorStop(1, 'rgba(0, 192, 0, 0.1)'); // Bottom transparent color
+  gradient.addColorStop(0, gradientTopColor); // Top color
+  gradient.addColorStop(1, gradientBottomColor); // Bottom transparent color
 
   // Initialize Chart.js chart
   new Chart(ctx, {
@@ -139,7 +145,7 @@ function initializeChart(
         {
           label: ``,
           data: data,
-          borderColor: 'rgba(0, 192, 0, 0.7)',
+          borderColor: lineColor,
           backgroundColor: gradient,
           fill: true,
           tension: 0.4,
