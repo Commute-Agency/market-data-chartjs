@@ -13,6 +13,26 @@ const locale =
   'es-AR';
 
 /**
+ * Formats a number as plain text or as currency (e.g. ARS with a single decimal),
+ * depending on whether a currency code is provided.
+ */
+function formatNumber(value: number, numberLocale: string, currency?: string): string {
+  if (currency) {
+    return value.toLocaleString(numberLocale, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
+  }
+
+  return value.toLocaleString(numberLocale, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+}
+
+/**
  * Waits for the Chart.js library to load and initializes the charts.
  */
 function waitForChartJsAndInitialize(interval = 1000): void {
@@ -130,6 +150,8 @@ function initializeChart(
   const lineColor = canvas.dataset.lineColor || 'rgba(0, 192, 0, 0.7)';
   const gradientTopColor = canvas.dataset.gradientTopColor || lineColor;
   const gradientBottomColor = canvas.dataset.gradientBottomColor || 'rgba(0, 192, 0, 0.1)';
+  // e.g. data-currency="ARS" on the canvas to format y-axis values as currency.
+  const currency = canvas.dataset.currency;
 
   // Create gradient for the chart background
   const gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -201,6 +223,14 @@ function initializeChart(
       },
       plugins: {
         legend: { display: false, position: 'top' },
+        tooltip: {
+          callbacks: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            label: function (context: any): string {
+              return formatNumber(context.parsed.y, locale, currency);
+            },
+          },
+        },
       },
       interaction: {
         intersect: false,
@@ -226,10 +256,7 @@ function formatNumbersByAttribute(attribute: string, locale: string): void {
   elements.forEach((element) => {
     const value = parseFloat(element.textContent || '0');
     if (!isNaN(value)) {
-      element.textContent = value.toLocaleString(locale, {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      });
+      element.textContent = formatNumber(value, locale, element.dataset.currency);
     }
   });
 }
