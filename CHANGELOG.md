@@ -1,5 +1,11 @@
 # @commute/market-data-chartjs
 
+## 2.4.1
+
+### Patch Changes
+
+- 4104363: Add optional currency formatting (e.g. ARS) for chart tooltip values and `data-number` elements via a `data-currency` attribute.
+
 ## 2.4.0
 
 ### Minor Changes
