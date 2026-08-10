@@ -13,12 +13,17 @@ This was originally developed to be used in a Webflow project, but you can use i
 
 ## Requirements
 
-This library requires the use of [chartjs](https://www.npmjs.com/package/chart.js?activeTab=readme). 
-You can add the following line inside the <head> tag in your website:
+This library requires the use of [chartjs](https://www.npmjs.com/package/chart.js?activeTab=readme), plus a
+date adapter for its `time` x-axis scale. Add the following lines inside the `<head>` tag in your website,
+in this order:
 
-```bash
-<script async src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+```html
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 ```
+
+Use `defer` (not `async`) on these scripts, and load this library's script after them, so the date adapter
+is registered before any chart is created.
 
 ## Installation
 

@@ -90,7 +90,12 @@ function initializeCharts(): void {
           150
         );
 
-        initializeChart(canvas, downsampledLabels, downsampledData, chartItem.id);
+        const points: { x: Date; y: number }[] = downsampledData.map((value, index) => ({
+          x: parseTimeLabel(downsampledLabels[index]),
+          y: value,
+        }));
+
+        initializeChart(canvas, points, chartItem.id);
         scriptTag.remove(); // Remove the script tag after processing
       } catch (error) {
         console.error(`Error parsing JSON for chart ID: ${chartItem.id}`, error);
@@ -127,16 +132,25 @@ function adaptiveDownsampling(data: number[], labels: string[], maxPoints = 50) 
 }
 
 /**
+ * Parses an "HH:MM:SS" time label into a Date object anchored to today,
+ * so Chart.js's time scale can position points by real elapsed time.
+ */
+function parseTimeLabel(label: string): Date {
+  const [hours, minutes, seconds] = label.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, seconds || 0, 0);
+  return date;
+}
+
+/**
  * Initialize a Chart.js chart.
  * @param canvas - HTMLCanvasElement where the chart will render.
- * @param labels - Array of labels for the x-axis.
- * @param data - Array of data values for the chart.
+ * @param points - Array of {x, y} points, positioned on the x-axis by real time.
  * @param chartId - Unique ID for the chart (for logging/debugging purposes).
  */
 function initializeChart(
   canvas: HTMLCanvasElement,
-  labels: string[],
-  data: number[],
+  points: { x: Date; y: number }[],
   chartId: string
 ): void {
   const ctx = canvas.getContext('2d');
@@ -151,7 +165,8 @@ function initializeChart(
   const gradientTopColor = canvas.dataset.gradientTopColor || lineColor;
   const gradientBottomColor = canvas.dataset.gradientBottomColor || 'rgba(0, 192, 0, 0.1)';
   // e.g. data-currency="ARS" on the canvas to format y-axis values as currency.
-  const currency = canvas.dataset.currency;
+  const { currency, tickIntervalMinutes } = canvas.dataset;
+  const tickStepSize = Number(tickIntervalMinutes) || undefined;
 
   // Create gradient for the chart background
   const gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -162,11 +177,10 @@ function initializeChart(
   new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
       datasets: [
         {
           label: ``,
-          data: data,
+          data: points,
           borderColor: lineColor,
           backgroundColor: gradient,
           fill: true,
@@ -182,21 +196,36 @@ function initializeChart(
       maintainAspectRatio: false,
       scales: {
         x: {
-          grid: { display: false, drawTicks: true, offset: true },
+          type: 'time',
+          time: {
+            tooltipFormat: 'HH:mm:ss',
+            displayFormats: { minute: 'HH:mm', hour: 'HH:mm' },
+          },
+          grid: { display: false, drawTicks: true },
           title: { display: false, text: 'Time' },
+          // When a fixed interval is configured (data-tick-interval-minutes), generate
+          // ticks at exact multiples of it, instead of Chart.js's automatic "nice" steps.
+          ...(tickStepSize
+            ? {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                afterBuildTicks: (axis: any) => {
+                  const stepMs = tickStepSize * 60 * 1000;
+                  const firstTick = Math.ceil(axis.min / stepMs) * stepMs;
+                  const generatedTicks = [];
+
+                  for (let value = firstTick; value <= axis.max; value += stepMs) {
+                    generatedTicks.push({ value });
+                  }
+
+                  axis.ticks = generatedTicks;
+                },
+              }
+            : {}),
           ticks: {
             autoSkip: true, // Salta etiquetas si son demasiadas
             autoSkipPadding: 20, // Asegura que haya espacio entre ticks
             maxRotation: 0, // Evita que las etiquetas se roten
-            //align: 'right',
-            includeBounds: true,
-            //maxTicksLimit: 10,
             padding: -30,
-            //z: 10,
-            callback: function (value: number, index: number): string {
-              return index === 0 ? '' : labels[index].split(':').slice(0, 2).join(':'); // Quita los segundos
-            },
-            offset: true, // 🔹 Evita que los ticks extremos queden pegados
             clip: false, // 🔹 Evita que se corten los valores en los bordes
             display: true,
           },
