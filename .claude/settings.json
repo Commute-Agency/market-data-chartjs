@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(gh run *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Skill(browser-automation)",
+      "Skill(browser-automation:*)",
+      "Bash(node /Users/juanjoperazzo/.claude/skills/browser-automation/browser.mjs \"file:///private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/0a9baec3-4704-4511-9f17-89344f2fc569/scratchpad/test.html\" --screenshot /private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/0a9baec3-4704-4511-9f17-89344f2fc569/scratchpad/shot.png --wait \"#chart1-canvas\" --timeout 20000)",
+      "Bash(node /Users/juanjoperazzo/.claude/skills/browser-automation/browser.mjs \"file:///private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/0a9baec3-4704-4511-9f17-89344f2fc569/scratchpad/test.html\" --wait \"#chart1-canvas\" --timeout 20000 --eval \"\\(\\(\\) => { const c = Chart.getChart\\(document.getElementById\\('chart1-canvas'\\)\\); return { time: c.options.scales.x.time, ticksCfg: c.options.scales.x.ticks }; }\\)\\(\\)\")",
+      "Bash(node /Users/juanjoperazzo/.claude/skills/browser-automation/browser.mjs \"file:///private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/0a9baec3-4704-4511-9f17-89344f2fc569/scratchpad/test.html\" --wait \"#chart1-canvas\" --timeout 20000 --eval \"\\(\\(\\) => { const c = window.Chart.getChart\\(document.getElementById\\('chart1-canvas'\\)\\); return JSON.stringify\\({ time: c.options.scales.x.time }\\); }\\)\\(\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm run *)",
+      "Bash(node /Users/juanjoperazzo/.claude/skills/browser-automation/browser.mjs \"file:///private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/91537a3a-c604-4762-b3d3-c13a5ba66830/scratchpad/test-schedule.html\" --wait \"#chart1-canvas\" --screenshot /private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/91537a3a-c604-4762-b3d3-c13a5ba66830/scratchpad/chart-test.png --timeout 20000)",
+      "Bash(pnpm check *)",
+      "Bash(node /Users/juanjoperazzo/.claude/skills/browser-automation/browser.mjs \"file:///private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/91537a3a-c604-4762-b3d3-c13a5ba66830/scratchpad/test-gradient.html\" --wait \"#chart2-canvas\" --screenshot /private/tmp/claude-501/-Users-juanjoperazzo-workspace-market-data-chartjs/91537a3a-c604-4762-b3d3-c13a5ba66830/scratchpad/gradient-test.png --timeout 20000)"
     ]
   }
 }

@@ -165,11 +165,22 @@ function initializeChart(
   const gradientTopColor = canvas.dataset.gradientTopColor || lineColor;
   const gradientBottomColor = canvas.dataset.gradientBottomColor || 'rgba(0, 192, 0, 0.1)';
   // e.g. data-currency="ARS" on the canvas to format y-axis values as currency.
-  const { currency, tickIntervalMinutes } = canvas.dataset;
+  const { currency, tickIntervalMinutes, startTime, endTime } = canvas.dataset;
   const tickStepSize = Number(tickIntervalMinutes) || undefined;
+  // When both data-start-time and data-end-time are set (e.g. "11:00"), pin the
+  // x-axis to that fixed schedule window instead of auto-ranging from the data,
+  // so the line visually fills in toward the edge as new points arrive.
+  const scheduleStart = startTime && endTime ? parseTimeLabel(startTime) : undefined;
+  const scheduleEnd = startTime && endTime ? parseTimeLabel(endTime) : undefined;
 
-  // Create gradient for the chart background
-  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  // Create gradient for the chart background. data-gradient-angle (degrees, clockwise)
+  // rotates the gradient line away from the default straight-down direction.
+  const gradientAngle = Number(canvas.dataset.gradientAngle) || 0;
+  const gradientAngleRad = (gradientAngle * Math.PI) / 180;
+  const gradientLength = 400;
+  const gradientX1 = gradientLength * Math.sin(gradientAngleRad);
+  const gradientY1 = gradientLength * Math.cos(gradientAngleRad);
+  const gradient = ctx.createLinearGradient(0, 0, gradientX1, gradientY1);
   gradient.addColorStop(0, gradientTopColor); // Top color
   gradient.addColorStop(1, gradientBottomColor); // Bottom transparent color
 
@@ -203,6 +214,9 @@ function initializeChart(
           },
           grid: { display: false, drawTicks: true },
           title: { display: false, text: 'Time' },
+          // When a fixed schedule is configured (data-start-time/data-end-time), pin
+          // the axis range instead of letting it auto-range from the data extent.
+          ...(scheduleStart && scheduleEnd ? { min: scheduleStart, max: scheduleEnd } : {}),
           // When a fixed interval is configured (data-tick-interval-minutes), generate
           // ticks at exact multiples of it, instead of Chart.js's automatic "nice" steps.
           ...(tickStepSize
@@ -268,6 +282,7 @@ function initializeChart(
       layout: {
         padding: {
           bottom: -50, // 🔹 Ajusta este valor para más margen
+          right: 10, // 🔹 Evita que la línea quede pegada al borde derecho
         },
       },
     },
