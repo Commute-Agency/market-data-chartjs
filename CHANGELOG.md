@@ -1,5 +1,12 @@
 # @commute/market-data-chartjs
 
+## 3.1.0
+
+### Minor Changes
+
+- 140238d: Add optional `data-start-time` / `data-end-time` attributes on the canvas to pin the x-axis to a fixed schedule window (e.g. `11:00` to `17:00`), instead of auto-ranging to only the data received so far. As new points arrive, the line fills in toward the end of a stable axis. Both attributes must be set together; when omitted, the axis continues to auto-range as before.
+- 140238d: Add optional `data-gradient-angle` attribute on the canvas to rotate the chart's fill gradient clockwise by a given number of degrees, instead of always being strictly vertical. Defaults to `0`, so existing charts render unchanged.
+
 ## 3.0.0
 
 ### Major Changes
